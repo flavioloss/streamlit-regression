@@ -5,6 +5,7 @@ import seaborn as sns
 import streamlit as st
 import ppscore as pps
 import time
+import os
 from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
@@ -174,15 +175,26 @@ def main():
 
 ### Df infos
     st.title('Streamlit Regression Deploy Pipeline')
-    select_dataset = st.sidebar.selectbox('Select your Dataset', ('None', 'House Prices'))
+    select_dataset = st.sidebar.selectbox('Select your Dataset',
+                                          ('None', 'House Prices', 'Import csv'))
+    st.subheader('**Import csv or use demo csv house pricing**')
     if select_dataset == 'None':
-        st.markdown('**No Dataset selected**')
+        st.write(' ')
+        st.markdown('No Dataset selected')
     else:
         if select_dataset == 'House Prices':
             st.subheader('House Prices Dataset')
             df = pd.read_csv('house_prices_train.csv')
             df.set_index('Id', inplace=True)
             target = 'SalePrice'
+        elif select_dataset == 'Import csv':
+            uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+            if uploaded_file is not None:
+                df = pd.read_csv(uploaded_file)
+            else:
+                df = pd.read_csv('house_prices_train.csv')
+                df.set_index('Id', inplace=True)
+                target = 'SalePrice'
         slider = st.slider('Header size', 1, 50)
         st.dataframe(df.head(slider))
         st.write('Data Shape: ', df.shape)
