@@ -1,0 +1,7 @@
+numpy
+pandas
+streamlit==0.61.0
+ppscore
+yellowbrick
+scikit-learn
+seaborn
